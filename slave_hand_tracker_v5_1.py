@@ -63,19 +63,29 @@ while True:
     results = hands.process(image_rgb)
     image_rgb.flags.writeable = True
 
+    # 기존 frame을 새 랜드마크만 그릴 화면으로 만듬
+    blank = np.zeros_like(frame)
+
     # 랜드마크가 있으면 그리기
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
-            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            # mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            mp_drawing.draw_landmarks(blank, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
     # 프레임 표시
-    cv2.imshow("Slave Received", frame)
+    # cv2.imshow("Slave Received", frame)
+    cv2.imshow("Slave Received", blank)
 
     # ACK 응답
     conn.sendall(b'OK')
 
+
+
+
+
     # 결과 화면 출력
-    cv2.imshow("Slave: Hand Tracking", frame)
+    # cv2.imshow("Slave: Hand Tracking", frame)
+    cv2.imshow("Slave: Hand Tracking", blank)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
